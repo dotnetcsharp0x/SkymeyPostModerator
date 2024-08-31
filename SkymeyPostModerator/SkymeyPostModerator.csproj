@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libs\SkymeyLibs\SkymeyLibs\SkymeyLibs.csproj" />
+  </ItemGroup>
+
 </Project>

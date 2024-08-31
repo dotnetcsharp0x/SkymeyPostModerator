@@ -1,0 +1,140 @@
+﻿@page "/posts/create"
+@inject HttpClient _httpClient;
+
+<PageTitle>Create API post</PageTitle>
+
+<h1>Create API post</h1>
+
+<EditForm Model="_POST" OnValidSubmit="SubmitForm">
+    <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <InputText @bind-Value="_POST.Title" id="Title" class="form-control" autocomplete="off" />
+    </div>
+    <div class="mb-3">
+        <label for="Description" class="form-label">Description</label>
+        <InputText @bind-Value="_POST.Description" id="Description" class="form-control" autocomplete="off" />
+    </div>
+    <div class="mb-3">
+        <label for="Content" class="form-label">Content</label>
+        <InputText @bind-Value="_POST.Content" id="Content" class="form-control" autocomplete="off" />
+    </div>
+    <div class="mb-3">
+        <label for="Type" class="form-label">Type</label>
+        <InputSelect @bind-Value="_POST.Type" multiple class="form-control">
+            <option value="GET">GET</option>
+            <option value="GET">POST</option>
+            <option value="GET">PUT</option>
+            <option value="GET">DELETE</option>
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label for="How_To_Send" class="form-label">How_To_Send</label>
+        <InputText @bind-Value="_POST.How_To_Send" id="How_To_Send" class="form-control" autocomplete="off" />
+    </div>
+    <div class="mb-3">
+        <label for="API_URL" class="form-label">API_URL</label>
+        <InputText @bind-Value="_POST.API_URL" id="API_URL" class="form-control" autocomplete="off" />
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+<div class="border-1 border-dark" style="background-color:#DADADA">
+    <h4>Tags:</h4>
+    <button value="button" class="btn btn-primary" @onclick="@(() => _POST_VIEW_MODEL.API_POST_TAGS.Add(new API_POST_TAGS {Title = TAG_NAME,POST_ID = _POST_VIEW_MODEL.API_POST._id}))">Добавить тег</button>
+    <InputText @bind-Value="TAG_NAME" id="TAG_NAME" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter tag name" />
+
+    @foreach (var item in _POST_VIEW_MODEL.API_POST_TAGS)
+    {
+        <ul>
+            <li>@item.Title</li>
+        </ul>
+    }
+</div>
+<div class="border-1 border-dark" style="background-color:#DADADA">
+    <h4>Responses</h4>
+    <button class="btn btn-primary" @onclick="@(() => _POST_VIEW_MODEL.API_POST_RESPONSES.Add(new API_POST_RESPONSES {POST_ID = _POST_VIEW_MODEL.API_POST._id, Color = RESPONSE_COLOR, Title = RESPONSE_TITLE, Description = RESPONSE_DESCRIPTION}))">Добавить тег</button>
+    <InputText @bind-Value="RESPONSE_TITLE" id="RESPONSE_TITLE" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter response name" />
+    <InputText @bind-Value="RESPONSE_COLOR" id="RESPONSE_COLOR" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter color symbol (g,r)" />
+    <InputText @bind-Value="RESPONSE_DESCRIPTION" id="RESPONSE_DESCRIPTION" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter description" />
+
+    @foreach (var item in _POST_VIEW_MODEL.API_POST_RESPONSES)
+    {
+        <ul>
+            <li>@item.Title - @item.Color - @item.Description</li>
+        </ul>
+    }
+</div>
+<div class="border-1 border-dark" style="background-color:#DADADA">
+    <h4>Params</h4>
+    <button class="btn btn-primary" @onclick="@(() => _POST_VIEW_MODEL.API_POST_PARAMS.Add(new API_POST_PARAMS {POST_ID=_POST_VIEW_MODEL.API_POST._id, Title = PARAM_TITLE, Param_ID = PARAM_ID, Description = PARAM_DESCRIPTION,Type=PARAM_TYPE}))">Добавить тег</button>
+    <InputText @bind-Value="PARAM_TITLE" id="PARAM_TITLE" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter param name" />
+    <InputText @bind-Value="PARAM_ID" id="PARAM_ID" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter param ID" />
+    <InputText @bind-Value="PARAM_DESCRIPTION" id="PARAM_DESCRIPTION" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter description" />
+    <InputText @bind-Value="PARAM_TYPE" id="PARAM_TYPE" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter param type" />
+
+    @foreach (var item in _POST_VIEW_MODEL.API_POST_PARAMS)
+    {
+        <ul>
+            <li>@item.Title - @item.Param_ID - @item.Description - @item.Type</li>
+        </ul>
+    }
+</div>
+<div class="border-1 border-dark" style="background-color:#DADADA">
+    <h4>Samples</h4>
+    <button class="btn btn-primary" @onclick="@(() => _POST_VIEW_MODEL.API_POST_CODE_SAMPLES.Add(new API_POST_CODE_SAMPLES {POST_ID=_POST_VIEW_MODEL.API_POST._id,Title=SAMPLE_TITLE, Content = SAMPLE_CONTENT}))">Добавить тег</button>
+    <InputText @bind-Value="SAMPLE_TITLE" id="SAMPLE_TITLE" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter sample title" />
+    <InputText @bind-Value="SAMPLE_CONTENT" id="SAMPLE_CONTENT" class="form-control mt-4 mb-4" autocomplete="off" placeholder="Enter sample content" />
+
+    @foreach (var item in _POST_VIEW_MODEL.API_POST_CODE_SAMPLES)
+    {
+        <ul>
+            <li>@item.Title - @item.Content</li>
+        </ul>
+    }
+</div>
+
+@code {
+    private API_POST _POST = new API_POST();
+
+
+    private POST_VIEW_MODEL _POST_VIEW_MODEL = new POST_VIEW_MODEL();
+
+    private string TAG_NAME = default!;
+
+    private string RESPONSE_TITLE = default!;
+    private string RESPONSE_COLOR = default!;
+    private string RESPONSE_DESCRIPTION = default!;
+
+    private string PARAM_TITLE = default!;
+    private string PARAM_ID = default!;
+    private string PARAM_DESCRIPTION = default!;
+    private string PARAM_TYPE = default!;
+
+    private string SAMPLE_TITLE = default!;
+    private string SAMPLE_CONTENT = default!;
+
+    protected override void OnInitialized()
+    {
+        _POST._id = MongoDB.Bson.ObjectId.GenerateNewId();
+        _POST_VIEW_MODEL.API_POST = _POST;
+        _POST_VIEW_MODEL.API_POST_CODE_SAMPLES.Add(new API_POST_CODE_SAMPLES() {POST_ID = _POST._id});
+        _POST_VIEW_MODEL.API_POST_PARAMS.Add(new API_POST_PARAMS() { POST_ID = _POST._id });
+        _POST_VIEW_MODEL.API_POST_TAGS.Add(new API_POST_TAGS() { POST_ID = _POST._id });
+        _POST_VIEW_MODEL.API_POST_RESPONSES.Add(new API_POST_RESPONSES() { POST_ID = _POST._id });
+    }
+
+    private async Task SubmitForm()
+    {
+        _POST_VIEW_MODEL.API_POST = _POST;
+        try
+        {
+            var content = new StringContent(JsonSerializer.Serialize(_POST_VIEW_MODEL), null, "application/json");
+       
+            var resp = await _httpClient.PostAsync("https://localhost:5030/Post/CreatePost", content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message.ToString());
+        }
+    }
+}
