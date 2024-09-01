@@ -117,10 +117,6 @@
     {
         _POST._id = MongoDB.Bson.ObjectId.GenerateNewId();
         _POST_VIEW_MODEL.API_POST = _POST;
-        _POST_VIEW_MODEL.API_POST_CODE_SAMPLES.Add(new API_POST_CODE_SAMPLES() {POST_ID = _POST._id});
-        _POST_VIEW_MODEL.API_POST_PARAMS.Add(new API_POST_PARAMS() { POST_ID = _POST._id });
-        _POST_VIEW_MODEL.API_POST_TAGS.Add(new API_POST_TAGS() { POST_ID = _POST._id });
-        _POST_VIEW_MODEL.API_POST_RESPONSES.Add(new API_POST_RESPONSES() { POST_ID = _POST._id });
     }
 
     private async Task SubmitForm()
@@ -136,5 +132,6 @@
         {
             Console.WriteLine(ex.Message.ToString());
         }
+        // TODO
     }
 }
