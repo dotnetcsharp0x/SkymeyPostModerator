@@ -1,0 +1,66 @@
+﻿@page "/Tokens"
+@inject HttpClient _httpClient
+
+<PageTitle>Home</PageTitle>
+
+<EditForm Model="_TOKEN" OnValidSubmit="SubmitForm">
+    <div class="mb-3">
+        <label for="Symbol" class="form-label">Symbol</label>
+        <InputText @bind-Value="_TOKEN.Symbol" id="Symbol" class="form-control" autocomplete="off" />
+    </div>
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <InputText @bind-Value="_TOKEN.Name" id="Name" class="form-control" autocomplete="off" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@if (_API_TOKENs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var token in _API_TOKENs)
+            {
+                <tr>
+                    <td>@token.Symbol</td>
+                    <td>@token.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<API_TOKEN>? _API_TOKENs;
+    private API_TOKEN _TOKEN = new API_TOKEN();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _API_TOKENs = await _httpClient.GetFromJsonAsync<IEnumerable<API_TOKEN>>("https://localhost:5071/Token/GetTokens");
+    }
+    private async Task SubmitForm()
+    {
+        try
+        {
+            var content = new StringContent(JsonSerializer.Serialize(_TOKEN), null, "application/json");
+
+            var resp = await _httpClient.PostAsync("https://localhost:5071/Token/AddToken", content);
+            _API_TOKENs = await _httpClient.GetFromJsonAsync<IEnumerable<API_TOKEN>>("https://localhost:5071/Token/GetTokens");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message.ToString());
+        }
+        // TODO
+    }
+}
