@@ -9,7 +9,6 @@ builder.Services.AddRazorComponents()
 builder.Configuration.SetBasePath(builder.Configuration.GetSection("ConfigPath").Value)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 builder.Services.Configure<MainSettings>(builder.Configuration.GetSection("MainSettings"));
-builder.WebHost.UseUrls("http://localhost:5040;https://localhost:5050;");
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
